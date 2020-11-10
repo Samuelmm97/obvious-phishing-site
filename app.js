@@ -42,17 +42,6 @@ mongoose.connect("mongodb+srv://"+ process.env.DATABASE_NAME + ":" + process.env
 const userSchema = new mongoose.Schema({
   email: String,
   password: String,
-  googleId: {
-    type: String,
-    required: false,
-    unique: false
-  },
-  secret: String,
-  facebookId: {
-    type: String,
-    required: false,
-    unique: false
-  },
   username: {
     type: String,
     required: false,
@@ -78,35 +67,6 @@ passport.deserializeUser(function(id, done) {
     done(err, user);
   });
 });
-
-passport.use(new GoogleStrategy({
-    clientID: process.env.CLIENT_ID,
-    clientSecret: process.env.CLIENT_SECRET,
-    callbackURL: process.env.GOOGLE_APP_CALLBACK,
-    userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo"
-  },
-  function(accessToken, refreshToken, profile, cb) {
-    console.log(profile);
-    User.findOrCreate({ googleId: profile.id }, function (err, user) {
-      return cb(err, user);
-    });
-  }
-));
-
-
-
-passport.use(new FacebookStrategy({
-    clientID: process.env.FACEBOOK_APP_ID,
-    clientSecret: process.env.FACEBOOK_APP_SECRET,
-    callbackURL: process.env.FACEBOOK_APP_CALLBACK
-  },
-  function(accessToken, refreshToken, profile, cb) {
-    console.log(profile);
-    User.findOrCreate({ facebookId: profile.id }, function (err, user) {
-      return cb(err, user);
-    });
-  }
-));
 
 
 
